@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom CAPTCHA Landing Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #captchaImages {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+        .captcha-image {
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        .captcha-image:hover {
+            border: 2px solid #007BFF;
+        }
+        .selected {
+            border: 4px solid #28A745;
+        }
+        .container {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SECURITY CHECKPOINT</h1>
+        <p>Prove you're not a robot in disguise by selecting the Decepticons:</p>
+        <form id="captchaForm">
+            <div id="captchaImages">
+                <!-- Images will be dynamically inserted via JavaScript -->
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="errorMessage" class="error"></p>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const captchaImagesContainer = document.getElementById("captchaImages");
+            const form = document.getElementById("captchaForm");
+            const errorMessage = document.getElementById("errorMessage");
+        
+            // Define images with correct answers
+            const images = [
+                { src: "images/Airrazor_A.jpg", correct: false },  // Incorrect Image
+                { src: "images/archadis_D.jpg", correct: true }, // Correct Image
+                { src: "images/bigshot_A.jpg", correct: false }, // Incorrect Image
+                { src: "images/Blitz_D.jpg", correct: true },  // Correct Image
+                { src: "images/Cheetor_A.jpg", correct: false }, // Incorrect Image
+                { src: "images/Primus.jpg", correct: false }, // Incorrect Image
+                { src: "images/VectorPrime_A.jpg", correct: false },  // Incorrect Image
+                { src: "images/RodMinor_A.jpg", correct: false }, // Incorrect Image
+                { src: "images/laserwave-tank.jpg", correct: true } // Correct Image
+            ];
+        
+            let selectedImage = null;
+        
+            // Debugging: Check if images load properly
+            console.log("Images array:", images);
+        
+            // Display images
+            images.forEach(function(image) {
+                let img = document.createElement("img");
+                img.src = image.src;
+                img.classList.add("captcha-image");
+                img.dataset.correct = image.correct;
+                img.addEventListener("click", function() {
+                    selectedImage = image.correct;
+                    document.querySelectorAll(".captcha-image").forEach(function(img) {
+                        img.classList.remove("selected");
+                    });
+                    img.classList.add("selected");
+                });
+                captchaImagesContainer.appendChild(img);
+            });
+        
+            // Form submission
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (selectedImage === true) {
+                    window.location.href = "success.html";  // Redirect if correct
+                } else {
+                    errorMessage.textContent = "Incorrect choice. Please try again.";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
